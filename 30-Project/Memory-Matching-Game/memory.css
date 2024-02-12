@@ -1,0 +1,50 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+.winner{
+    display: none;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.card {
+    width: 100px;
+    height: 100px;
+    background-color: lightblue;
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.card.flip{
+    background-color: darkblue;
+    color: white;
+}
+
+.game-container {
+    text-align: center;
+    margin-top: 50px;
+}
+button{
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 12px;
+    background-color: rgb(138, 244, 163);
+    color: black;
+    font-family: 'Times New Roman', Times, serif;
+}
