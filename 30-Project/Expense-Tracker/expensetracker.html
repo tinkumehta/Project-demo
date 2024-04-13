@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            margin: 5px;
+            width: 200px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .delete-button {
+            background-color: #f44336;
+        }
+        .delete-button:hover {
+            background-color: #da190b;
+        }
+    </style>
+</head>
+<body>
+    <h2>Expense Tracker</h2>
+    <form id="expenseForm">
+        <label for="description">Description:</label>
+        <input type="text" id="description" required>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" min="0" step="0.01" required>
+        <button type="submit">Add Expense</button>
+    </form>
+    <table id="expenseTable">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="expenseList">
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><strong>Total:</strong></td>
+                <td id="totalAmount"></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    <script>
+        const expenseForm = document.getElementById('expenseForm');
+        const expenseList = document.getElementById('expenseList');
+        const totalAmount = document.getElementById('totalAmount');
+
+        let expenses = [];
+
+        expenseForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const description = document.getElementById('description').value;
+            let amount = parseFloat(document.getElementById('amount').value);
+
+            if (description && amount) {
+                // Check if amount is negative for subtraction
+                if (description.toLowerCase().includes('subtract')) {
+                    amount *= -1; // Convert to negative
+                } else if (description.toLowerCase().includes('multiply')) {
+                    // Check if amount should be multiplied
+                    description.replace(/(\d+)\s?[*x]\s?(\d+)/i, (_, a, b) => {
+                        amount *= parseInt(a) * parseInt(b);
+                    });
+                }
+
+                expenses.push({ description, amount });
+                renderExpenses();
+                updateTotal();
+                expenseForm.reset();
+            }
+        });
+
+        function renderExpenses() {
+            expenseList.innerHTML = '';
+            expenses.forEach((expense, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${expense.description}</td>
+                    <td>₹${expense.amount.toFixed(2)}</td>
+                    <td><button class="delete-button" onclick="deleteExpense(${index})">Delete</button></td>
+                `;
+                expenseList.appendChild(row);
+            });
+        }
+
+        function updateTotal() {
+            const total = expenses.reduce((acc, expense) => acc + expense.amount, 0);
+            totalAmount.textContent = '₹' + total.toFixed(2);
+        }
+
+        function deleteExpense(index) {
+            expenses.splice(index, 1);
+            renderExpenses();
+            updateTotal();
+        }
+    </script>
+</body>
+</html>
